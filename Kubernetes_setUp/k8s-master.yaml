@@ -1,0 +1,47 @@
+- name: Initialize Kubernetes Master
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Reset any existing cluster (safe cleanup)
+      command: kubeadm reset -f
+      ignore_errors: yes
+
+    - name: Remove old PKI certificates (cleanup)
+      file:
+        path: /etc/kubernetes/pki
+        state: absent
+
+    - name: Remove existing kubectl config
+      file:
+        path: $HOME/.kube
+        state: absent
+
+    - name: Initialize cluster
+      command: kubeadm init --pod-network-cidr=192.168.0.0/16
+      args:
+        creates: /etc/kubernetes/admin.conf
+      register: kubeadm_init
+
+    - name: Configure kubectl for root
+      shell: |
+        mkdir -p $HOME/.kube
+        cp /etc/kubernetes/admin.conf $HOME/.kube/config
+        chown $(id -u):$(id -g) $HOME/.kube/config
+      when: kubeadm_init is changed
+
+    - name: Install Calico network
+      command: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      when: kubeadm_init is changed
+
+    - name: Get join command
+      command: kubeadm token create --print-join-command
+      register: join_cmd
+      when: kubeadm_init is changed
+
+    - name: Save join command
+      set_fact:
+        kube_join_command: "{{ join_cmd.stdout }}"
+      when: kubeadm_init is changed
