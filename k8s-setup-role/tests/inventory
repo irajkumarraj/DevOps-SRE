@@ -1,2 +1,10 @@
-localhost
+[k8s-master]
+master1 ansible_host=192.168.1.10
 
+[k8s-worker]
+worker1 ansible_host=192.168.1.11
+worker2 ansible_host=192.168.1.12
+
+[k8s_nodes:children]
+k8s-master
+k8s-worker

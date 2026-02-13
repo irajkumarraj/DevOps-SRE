@@ -1,2 +1,7 @@
 ---
 # vars file for k8s-setup-role
+distributors_to_update:
+  - RedHat
+  - Debian
+  - Fedora
+  - Alpine

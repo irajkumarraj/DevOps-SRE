@@ -1,0 +1,40 @@
+- name: install-container
+  block:
+    - name: Ensure CRB repo is enabled on RHEL-based systems
+      when: ansible_facts['os_family'] == "RedHat"
+      shell: yum config-manager --set-enabled crb
+      register: crb_enabled
+      changed_when: crb_enabled.rc == 0
+      notify: restart containerd
+
+    - name: Install containerd on RHEL-based systems
+      when: ansible_facts['os_family'] == "RedHat"
+      yum:
+        name: containerd
+        state: present
+        enablerepo: crb
+        disablerepo: kubernetes
+      notify: restart containerd
+
+    - name: Install containerd on Debian-based systems
+      when: ansible_facts['os_family'] == "Debian"
+      apt:
+        name: containerd
+        state: present
+        update_cache: yes
+      notify: restart containerd
+
+    - name: Configure containerd
+      shell: |
+        mkdir -p /etc/containerd
+        containerd config default > /etc/containerd/config.toml
+      args:
+        creates: /etc/containerd/config.toml
+      notify: restart containerd
+
+  handlers:
+    - name: restart containerd
+      systemd:
+        name: containerd
+        state: restarted
+        enabled: true
