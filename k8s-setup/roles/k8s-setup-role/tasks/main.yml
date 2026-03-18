@@ -1,0 +1,10 @@
+---
+# tasks file for k8s-setup-role
+- name: Common Steps for All Node
+  import_task: k8s-common.yaml
+
+- name: Steps for Master Node
+  import_task: k8s-master.yaml
+
+- name: Steps for Worker Node
+  import_task: k8s-worker.yaml
