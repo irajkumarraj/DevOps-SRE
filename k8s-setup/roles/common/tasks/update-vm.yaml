@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 - name: Update-system
   block:
     # - name: Update packages on CentOS-based systems
@@ -56,3 +57,42 @@
         update_cache: true
         upgrade: true
       when: "'Alpine' in distributors_to_update and ansible_facts['distribution'] == 'Alpine'"
+=======
+- name: update-system
+  block:
+    - name: Update packages on RedHat-based systems
+      yum:
+        name: '*'
+        state: latest
+      when: "'RedHat' in distributors_to_update and ansible_facts['os_family'] == 'RedHat'"
+
+    - name: Update packages on Fedora
+      dnf:
+        name: '*'
+        state: latest
+      when: "'Fedora' in distributors_to_update and ansible_facts['os_family'] == 'Fedora'"
+
+    - name: Update packages on Debian-based systems
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: "'Debian' in distributors_to_update and ansible_facts['os_family'] == 'Debian'"
+
+    - name: Update packages on SUSE-based systems
+      zypper:
+        name: '*'
+        state: latest
+      when: "'Suse' in distributors_to_update and ansible_facts['os_family'] == 'Suse'"
+
+    - name: Update packages on Arch-based systems
+      pacman:
+        name: '*'
+        state: latest
+      when: "'Arch' in distributors_to_update and ansible_facts['os_family'] == 'Arch'"
+
+    - name: Update packages on Alpine Linux
+      apk:
+        update_cache: yes
+        upgrade: yes
+      when: "'Alpine' in distributors_to_update and ansible_facts['os_family'] == 'Alpine'"
+>>>>>>> b3f70eedfa5ecb5cd2519c253d558f3dd7e960ef
