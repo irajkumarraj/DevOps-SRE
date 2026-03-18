@@ -1,0 +1,47 @@
+- name: Set default kubeadm_config
+  ansible.builtin.set_fact:
+    kubeadm_config: {}
+
+- name: Check if kubeadm command exists on all supported distributions
+  block:
+    - name: Check if kubeadm exists (CentOS family)
+      ansible.builtin.command: which kubeadm
+      register: kubeadm_check
+      changed_when: false
+      ignore_errors: true
+      when: ansible_facts['distribution'] == "CentOS"
+
+    - name: Check if kubeadm exists (Fedora)
+      ansible.builtin.command: which kubeadm
+      register: kubeadm_check
+      changed_when: false
+      ignore_errors: true
+      when: ansible_facts['distribution'] == "Fedora"
+
+    - name: Check if kubeadm exists (Debian family)
+      ansible.builtin.command: which kubeadm
+      register: kubeadm_check
+      changed_when: false
+      ignore_errors: true
+      when: ansible_facts['distribution'] == "Debian"
+
+    - name: Check if kubeadm exists (SUSE family)
+      ansible.builtin.command: which kubeadm
+      register: kubeadm_check
+      changed_when: false
+      ignore_errors: true
+      when: ansible_facts['distribution'] == "Suse"
+
+    - name: Check if kubeadm exists (Arch Linux)
+      ansible.builtin.command: which kubeadm
+      register: kubeadm_check
+      changed_when: false
+      ignore_errors: true
+      when: ansible_facts['distribution'] == "Archlinux"
+
+    - name: Check if kubeadm exists (Alpine Linux)
+      ansible.builtin.command: which kubeadm
+      register: kubeadm_check
+      changed_when: false
+      ignore_errors: true
+      when: ansible_facts['distribution'] == "Alpine"

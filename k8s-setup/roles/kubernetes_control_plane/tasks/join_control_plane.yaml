@@ -1,0 +1,23 @@
+- name: Join other master node as control plane
+  block:
+    - name: Wait for first master API server to be ready
+      ansible.builtin.wait_for:
+        host: "{{ hostvars[first_master_node]['ansible_host'] }}"
+        port: 6443
+        delay: 10
+        timeout: 300
+      # when: join_control_plane | default(true)
+
+    - name: Check if node is already part of cluster
+      ansible.builtin.command: kubeadm config view
+      register: kubeadm_config
+      ignore_errors: true
+      changed_when: false
+      become: true
+
+    - name: Join this node to HA control plane
+      ansible.builtin.command: "{{ hostvars[first_master_node]['join_command'] }} --control-plane"
+      become: true
+      args:
+        creates: /etc/kubernetes/kubelet.conf
+      # when: kubeadm_config.rc != 0

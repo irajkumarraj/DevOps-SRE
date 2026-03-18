@@ -1,2 +1,39 @@
 ---
 # tasks file for master
+- name: Reset any existing cluster (safe cleanup)
+  ansible.builtin.import_tasks:
+    file: reset-kubeadm.yaml
+
+- name: Remove old PKI certificates (cleanup)
+  ansible.builtin.import_tasks:
+    file: remove-old-k8s-pki.yaml
+
+- name: Remove existing kubectl config
+  ansible.builtin.import_tasks:
+    file: remove-old-kubectl-config.yaml
+
+- name: Initialize cluster
+  ansible.builtin.import_tasks:
+    file: kubeadm-init.yaml
+  register: kubeadm_init
+
+# - name: Configure kubectl for root
+#   ansible.builtin.import_tasks:
+#     file: configure-kubectl-for-root.yaml
+#   when: kubeadm_init is changed
+
+# - name: Install Calico/Fl network
+#   ansible.builtin.import_tasks:
+#     file: install-k8s-network.yaml
+#   when: kubeadm_init is changed
+
+# - name: Get join command
+#   ansible.builtin.import_tasks:
+#     file: get-join-command.yaml
+#   register: join_cmd
+#   when: kubeadm_init is changed
+
+# - name: Save join command
+#   ansible.builtin.import_tasks:
+#     file: save-join-command.yaml
+#   when: kubeadm_init is changed

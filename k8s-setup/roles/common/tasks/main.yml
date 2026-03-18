@@ -1,2 +1,12 @@
 ---
-# tasks file for common
+- name: Update vm
+  ansible.builtin.import_tasks:
+    file: update-vm.yaml
+
+# - name: Disable swap
+#   ansible.builtin.import_tasks:
+#     file: disable-swap.yaml
+
+# - name: Load Kernel modules
+#   ansible.builtin.import_tasks:
+#     file: kernel-modules-load.yaml

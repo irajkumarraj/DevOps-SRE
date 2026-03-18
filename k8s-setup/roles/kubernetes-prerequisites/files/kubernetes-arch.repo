@@ -1,0 +1,3 @@
+[kubernetes]
+Server = https://pkgs.k8s.io/core:/stable:/v1.35/arch/$arch/
+SigLevel = Optional TrustAll

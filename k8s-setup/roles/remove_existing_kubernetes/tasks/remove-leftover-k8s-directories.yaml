@@ -1,0 +1,73 @@
+- name: Remove leftover Kubernetes directories (all supported distributions)
+  block:
+    - name: Remove Kubernetes directories (CentOS family)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/kubernetes
+        - /var/lib/etcd
+        - /var/lib/kubelet
+        - /etc/cni/net.d
+        - /opt/cni/bin
+      when: ansible_facts['distribution'] == "CentOS"
+
+    - name: Remove Kubernetes directories (Fedora)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/kubernetes
+        - /var/lib/etcd
+        - /var/lib/kubelet
+        - /etc/cni/net.d
+        - /opt/cni/bin
+      when: ansible_facts['distribution'] == "Fedora"
+
+    - name: Remove Kubernetes directories (Debian family)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/kubernetes
+        - /var/lib/etcd
+        - /var/lib/kubelet
+        - /etc/cni/net.d
+        - /opt/cni/bin
+      when: ansible_facts['distribution'] == "Debian"
+
+    - name: Remove Kubernetes directories (SUSE family)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/kubernetes
+        - /var/lib/etcd
+        - /var/lib/kubelet
+        - /etc/cni/net.d
+        - /opt/cni/bin
+      when: ansible_facts['distribution'] == "Suse"
+
+    - name: Remove Kubernetes directories (Arch Linux)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/kubernetes
+        - /var/lib/etcd
+        - /var/lib/kubelet
+        - /etc/cni/net.d
+        - /opt/cni/bin
+      when: ansible_facts['distribution'] == "Archlinux"
+
+    - name: Remove Kubernetes directories (Alpine Linux)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/kubernetes
+        - /var/lib/etcd
+        - /var/lib/kubelet
+        - /etc/cni/net.d
+        - /opt/cni/bin
+      when: ansible_facts['distribution'] == "Alpine"

@@ -1,2 +1,9 @@
 ---
 # vars file for kubernetes-prerequisites
+distributors_to_update:
+  - CentOS
+  - Fedora
+  - Debian
+  - Suse
+  - Arch
+  - Alpine

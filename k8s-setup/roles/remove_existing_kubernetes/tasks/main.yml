@@ -1,0 +1,41 @@
+---
+# tasks file for remove_existing_kubernetes
+- name: Check if kubeadm exists
+  ansible.builtin.import_tasks:
+    file: kubeadm-exists.yaml
+
+- name: Check if node was initialized (admin.conf exists)
+  ansible.builtin.import_tasks:
+    file: check-node-initialized.yaml
+
+- name: Stop kubelet service if present
+  ansible.builtin.import_tasks:
+    file: stop-kubelet-service.yaml
+
+- name: Reset Kubernetes cluster if initialized
+  ansible.builtin.import_tasks:
+    file: reset-k8s-cluster-if-initialized.yaml
+
+# ----------------------------------------
+# Remove leftover Kubernetes state
+# ----------------------------------------
+
+- name: Remove Kubernetes directories
+  ansible.builtin.import_tasks:
+    file: remove-leftover-k8s-directories.yaml
+
+# ----------------------------------------
+# Flush iptables (optional but recommended)
+# ----------------------------------------
+
+- name: Flush iptables rules
+  ansible.builtin.import_tasks:
+    file: flush-iptables-rule.yaml
+
+# ----------------------------------------
+# Optional hard reset (remove packages)
+# ----------------------------------------
+
+- name: Remove Kubernetes packages (hard reset only)
+  ansible.builtin.import_tasks:
+    file: rm-k8s-packages.yaml

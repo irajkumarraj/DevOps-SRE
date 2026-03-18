@@ -1,0 +1,4 @@
+---
+# vars file for remove_existing_kubernetes
+# role vars (hard-coded)
+remove_k8s_packages: true

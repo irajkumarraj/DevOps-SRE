@@ -1,0 +1,37 @@
+- name: Check if Kubernetes node was initialized (admin.conf exists) for all supported distributions
+  block:
+    - name: Check if admin.conf exists (CentOS family)
+      ansible.builtin.stat:
+        path: /etc/kubernetes/admin.conf
+      register: kubeadm_config
+      when: ansible_facts['distribution'] == "CentOS"
+
+    - name: Check if admin.conf exists (Fedora)
+      ansible.builtin.stat:
+        path: /etc/kubernetes/admin.conf
+      register: kubeadm_config
+      when: ansible_facts['distribution'] == "Fedora"
+
+    - name: Check if admin.conf exists (Debian family)
+      ansible.builtin.stat:
+        path: /etc/kubernetes/admin.conf
+      register: kubeadm_config
+      when: ansible_facts['distribution'] == "Debian"
+
+    - name: Check if admin.conf exists (SUSE family)
+      ansible.builtin.stat:
+        path: /etc/kubernetes/admin.conf
+      register: kubeadm_config
+      when: ansible_facts['distribution'] == "Suse"
+
+    - name: Check if admin.conf exists (Arch Linux)
+      ansible.builtin.stat:
+        path: /etc/kubernetes/admin.conf
+      register: kubeadm_config
+      when: ansible_facts['distribution'] == "Archlinux"
+
+    - name: Check if admin.conf exists (Alpine Linux)
+      ansible.builtin.stat:
+        path: /etc/kubernetes/admin.conf
+      register: kubeadm_config
+      when: ansible_facts['distribution'] == "Alpine"

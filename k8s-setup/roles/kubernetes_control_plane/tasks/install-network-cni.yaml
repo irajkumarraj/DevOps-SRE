@@ -1,0 +1,20 @@
+- name: Install Kubernetes network plugin from user-provided URL
+  block:
+    - name: Validate network plugin selection
+      ansible.builtin.assert:
+        that:
+          - install_network_plugin is defined
+          - install_network_plugin in network_plugin_url
+        fail_msg: >
+          "Invalid network plugin '{{ install_network_plugin }}' selected.
+          Supported plugins: {{ network_plugin_url.keys() | list }}"
+
+    - name: Apply the Kubernetes network plugin YAML
+      ansible.builtin.shell: |
+        kubectl apply -f {{ network_plugin_url[install_network_plugin] }}
+      register: plugin_result
+      changed_when: plugin_result.rc == 0
+
+    - name: Show result
+      ansible.builtin.debug:
+        msg: "Network plugin '{{ install_network_plugin }}' installed successfully from {{ network_plugin_url[install_network_plugin] }}"

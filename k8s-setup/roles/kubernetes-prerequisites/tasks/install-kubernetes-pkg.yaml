@@ -1,0 +1,83 @@
+- name: Install kubernetes packages for each corresponding distribution
+  block:
+    # CentOS / CentOS / Rocky / Alma
+    - name: Install Kubernetes packages on RHEL/CentOS
+      ansible.builtin.yum:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+          - cri-tools
+          - kubernetes-cni
+        state: present
+        disable_gpg_check: false
+      become: true
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    # Fedora
+    - name: Install Kubernetes packages on Fedora
+      ansible.builtin.dnf:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+          - cri-tools
+          - kubernetes-cni
+        state: present
+      become: true
+      when: ansible_facts['distribution'] == 'Fedora'
+
+    # Debian / Ubuntu
+    - name: Install Kubernetes packages on Debian/Ubuntu
+      ansible.builtin.apt:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+          - cri-tools
+          - kubernetes-cni
+        state: present
+        update_cache: true
+      become: true
+      when: ansible_facts['distribution'] == 'Debian'
+
+    # SUSE
+    - name: Install Kubernetes packages on SUSE
+      community.general.zypper:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+          - cri-tools
+          - kubernetes-cni
+        state: present
+      become: true
+      when: ansible_facts['distribution'] == 'Suse'
+
+    # Arch Linux
+    - name: Install Kubernetes packages on Arch
+      community.general.pacman:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+          - cri-tools
+          - kubernetes-cni
+        state: present
+        update_cache: true
+      become: true
+      when: ansible_facts['distribution'] == 'Arch'
+
+    # Alpine Linux
+    - name: Install Kubernetes packages on Alpine
+      community.general.apk:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+          - cri-tools
+          - kubernetes-cni
+        state: present
+        update_cache: true
+      become: true
+      when: ansible_facts['distribution'] == 'Alpine'

@@ -1,2 +1,4 @@
 ---
 # tasks file for worker
+- name: Join cluster
+  import_task: join-worker-node.yaml

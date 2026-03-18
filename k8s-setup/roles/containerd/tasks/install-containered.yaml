@@ -1,0 +1,46 @@
+- name: Install containerd for each distribution
+  block:
+    - name: Install containerd on RHEL / CentOS
+      ansible.builtin.yum:
+        name: containerd
+        state: present
+      become: true
+      when: "'CentOS' in distributors_to_update and ansible_facts['distribution'] == 'CentOS'"
+
+    - name: Install containerd on Fedora
+      ansible.builtin.dnf:
+        name: containerd
+        state: present
+      become: true
+      when: "'Fedora' in distributors_to_update and ansible_facts['distribution'] == 'Fedora'"
+
+    - name: Install containerd on Debian / Ubuntu
+      ansible.builtin.apt:
+        name: containerd
+        state: present
+        update_cache: true
+      become: true
+      when: "'Debian' in distributors_to_update and ansible_facts['distribution'] == 'Debian'"
+
+    - name: Install containerd on SUSE
+      community.general.zypper:
+        name: containerd
+        state: present
+      become: true
+      when: "'Suse' in distributors_to_update and ansible_facts['distribution'] == 'Suse'"
+
+    - name: Install containerd on Arch
+      community.general.pacman:
+        name: containerd
+        state: present
+        update_cache: true
+      become: true
+      when: "'Arch' in distributors_to_update and ansible_facts['distribution'] == 'Arch'"
+
+    - name: Install containerd on Alpine
+      community.general.apk:
+        name: containerd
+        state: present
+        update_cache: true
+      become: true
+      when: "'Alpine' in distributors_to_update and ansible_facts['distribution'] == 'Alpine'"
