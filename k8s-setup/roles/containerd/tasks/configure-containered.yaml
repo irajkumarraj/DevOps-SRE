@@ -1,0 +1,61 @@
+- name: Configure containerd for specific distribution
+  block:
+    - name: Configure containerd on RHEL / CentOS
+      ansible.builtin.template:
+        src: containerd-config-rhel.toml.j2
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: "'CentOS' in distributors_to_update and ansible_facts['distribution'] == 'CentOS'"
+
+    - name: Configure containerd on Fedora
+      ansible.builtin.template:
+        src: containerd-config-fedora.toml.j2
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: "'Fedora' in distributors_to_update and ansible_facts['distribution'] == 'Fedora'"
+
+    - name: Configure containerd on Debian / Ubuntu
+      ansible.builtin.template:
+        src: containerd-config-debian.toml.j2
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: "'Debian' in distributors_to_update and ansible_facts['distribution'] == 'Debian'"
+
+    - name: Configure containerd on SUSE
+      ansible.builtin.template:
+        src: containerd-config-suse.toml.j2
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: "'Suse' in distributors_to_update and ansible_facts['distribution'] == 'Suse'"
+
+    - name: Configure containerd on Arch
+      ansible.builtin.template:
+        src: containerd-config-arch.toml.j2
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: "'Arch' in distributors_to_update and ansible_facts['distribution'] == 'Arch'"
+
+    - name: Configure containerd on Alpine
+      ansible.builtin.template:
+        src: containerd-config-alpine.toml.j2
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: "'Alpine' in distributors_to_update and ansible_facts['distribution'] == 'Alpine'"

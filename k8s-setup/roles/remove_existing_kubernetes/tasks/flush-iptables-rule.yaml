@@ -1,0 +1,31 @@
+- name: Flush iptables rules safely (all supported distributions)
+  block:
+    - name: Flush iptables rules (CentOS family)
+      ansible.builtin.command: iptables -F
+      when: ansible_facts['distribution'] == "CentOS"
+      changed_when: true
+
+    - name: Flush iptables rules (Fedora)
+      ansible.builtin.command: iptables -F
+      when: ansible_facts['distribution'] == "Fedora"
+      changed_when: true
+
+    - name: Flush iptables rules (Debian family)
+      ansible.builtin.command: iptables -F
+      when: ansible_facts['distribution'] == "Debian"
+      changed_when: true
+
+    - name: Flush iptables rules (SUSE family)
+      ansible.builtin.command: iptables -F
+      when: ansible_facts['distribution'] == "Suse"
+      changed_when: true
+
+    - name: Flush iptables rules (Arch Linux)
+      ansible.builtin.command: iptables -F
+      when: ansible_facts['distribution'] == "Archlinux"
+      changed_when: true
+
+    - name: Flush iptables rules (Alpine Linux)
+      ansible.builtin.command: iptables -F
+      when: ansible_facts['distribution'] == "Alpine"
+      changed_when: true

@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- hosts: workers
   remote_user: root
+  become: true
   roles:
     - containerd

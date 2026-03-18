@@ -1,0 +1,20 @@
+---
+# tasks file for kubernetes_control_plane
+- name: Initialize first master node
+  ansible.builtin.import_tasks:
+    file: init_first_master.yaml
+  register: first_master_initialized
+  when: inventory_hostname == first_master_node | default(false)
+
+- name: Install Network Plugin(Calico,Flannel,etc.)
+  ansible.builtin.import_tasks:
+    file: install-network-cni.yaml
+  when: first_master_initialized is defined and first_master_initialized.changed
+
+- name: Join as HA control plane
+  ansible.builtin.import_tasks:
+    file: join_control_plane.yaml
+  when:
+    - inventory_hostname != first_master_node | default(false)
+    - first_master_node is defined
+    - first_master_initialized is defined and first_master_initialized.changed

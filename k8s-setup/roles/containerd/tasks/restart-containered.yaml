@@ -1,0 +1,49 @@
+- name: Restart containerd
+  block:
+    - name: Restart containerd on RHEL / CentOS
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+        enabled: true
+      become: true
+      when: "'CentOS' in distributors_to_update and ansible_facts['distribution'] == 'CentOS'"
+
+    - name: Restart containerd on Fedora
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+        enabled: true
+      become: true
+      when: "'Fedora' in distributors_to_update and ansible_facts['distribution'] == 'Fedora'"
+
+    - name: Restart containerd on Debian / Ubuntu
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+        enabled: true
+      become: true
+      when: "'Debian' in distributors_to_update and ansible_facts['distribution'] == 'Debian'"
+
+    - name: Restart containerd on SUSE
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+        enabled: true
+      become: true
+      when: "'Suse' in distributors_to_update and ansible_facts['distribution'] == 'Suse'"
+
+    - name: Restart containerd on Arch
+      ansible.builtin.systemd:
+        name: containerd
+        state: restarted
+        enabled: true
+      become: true
+      when: "'Arch' in distributors_to_update and ansible_facts['distribution'] == 'Arch'"
+
+    - name: Restart containerd on Alpine
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
+        enabled: true
+      become: true
+      when: "'Alpine' in distributors_to_update and ansible_facts['distribution'] == 'Alpine'"

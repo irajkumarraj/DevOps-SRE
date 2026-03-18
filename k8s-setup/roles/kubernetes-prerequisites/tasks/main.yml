@@ -1,2 +1,13 @@
 ---
 # tasks file for kubernetes-prerequisites
+- name: Add Kubernetes repo
+  ansible.builtin.import_tasks:
+    file: add-kubernetes-repo.yaml
+
+- name: Install Kubernetes packages
+  ansible.builtin.import_tasks:
+    file: install-kubernetes-pkg.yaml
+
+- name: Enable kubelet
+  ansible.builtin.import_tasks:
+    file: enable-kubelet.yaml

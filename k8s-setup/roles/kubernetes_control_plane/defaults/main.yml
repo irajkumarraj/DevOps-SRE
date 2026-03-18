@@ -1,0 +1,27 @@
+---
+# defaults file for kubernetes_control_plane
+# Kubernetes version
+# k8s_version: "1.29.3-00"
+
+# Pod network CIDR
+pod_network_cidr: "10.244.0.0/16"
+
+# Control plane endpoint (VIP or load balancer for HA)
+control_plane_endpoint: "10.0.2.200:6443"
+
+# First master (inventory_hostname)
+first_master_node: "master-init"
+
+# Optional: additional kubeadm options
+kubeadm_extra_args: ""
+
+first_master: false
+join_control_plane: true
+
+# network plugin url
+network_plugin_url:
+  calico: https://docs.projectcalico.org/manifests/calico.yaml
+  flannel: https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+  canal: https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/canal.yaml
+
+install_network_plugin: calico

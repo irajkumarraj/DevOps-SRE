@@ -1,2 +1,9 @@
 ---
 # vars file for containerd
+distributors_to_update:
+    - CentOS
+    - Fedora
+    - Debian
+    - Suse
+    - Arch
+    - Alpine

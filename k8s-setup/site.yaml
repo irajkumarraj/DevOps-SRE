@@ -1,0 +1,11 @@
+---
+- name: Apply roles conditionally
+  hosts: all_nodes
+  become: yes
+
+  roles:
+    - role: common
+    - role: containerd
+    - role: kubernetes-prerequisites
+    - { role: master, when: "'all_nodes' in masters" }
+    - { role: worker, when: "'masters' in workers" }

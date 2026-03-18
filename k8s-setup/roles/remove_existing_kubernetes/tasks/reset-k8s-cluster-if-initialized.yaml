@@ -1,0 +1,78 @@
+- name: Reset Kubernetes cluster if initialized (all supported distributions)
+  block:
+    - name: Kill kube-apiserver, etcd, kube-controller-manager, kube-scheduler
+      ansible.builtin.shell: |
+        pkill kube-apiserver || true
+        pkill etcd || true
+        pkill kube-controller-manager || true
+        pkill kube-scheduler || true
+      ignore_errors: true
+
+    - name: Stop containerd (if present)
+      ansible.builtin.service:
+        name: containerd
+        state: stopped
+      ignore_errors: true
+
+    - name: Stop CRI-O (if present)
+      ansible.builtin.service:
+        name: crio
+        state: stopped
+      ignore_errors: true
+
+    # Unmount anything under kubelet to prevent "device busy" errors
+
+    - name: Find mounted kubelet paths
+      ansible.builtin.shell: |
+        mount | grep /var/lib/kubelet | awk '{print $3}'
+      register: kubelet_mounts
+      changed_when: false
+      failed_when: false
+
+    - name: Force unmount kubelet mounts
+      ansible.builtin.command: "umount -lf {{ item }}"
+      loop: "{{ kubelet_mounts.stdout_lines }}"
+      when: kubelet_mounts.stdout_lines | length > 0
+      ignore_errors: true
+      
+    - name: Reset Kubernetes cluster (CentOS family)
+      ansible.builtin.command: kubeadm reset -f
+      when:
+        - ansible_facts['distribution'] == "CentOS"
+        - kubeadm_config.stat.exists | default(false)
+      changed_when: kubeadm_config.stat.exists | default(false)
+
+    - name: Reset Kubernetes cluster (Fedora)
+      ansible.builtin.command: kubeadm reset -f
+      when:
+        - ansible_facts['distribution'] == "Fedora"
+        - kubeadm_config.stat.exists | default(false)
+      changed_when: kubeadm_config.stat.exists | default(false)
+
+    - name: Reset Kubernetes cluster (Debian family)
+      ansible.builtin.command: kubeadm reset -f
+      when:
+        - ansible_facts['distribution'] == "Debian"
+        - kubeadm_config.stat.exists | default(false)
+      changed_when: kubeadm_config.stat.exists | default(false)
+
+    - name: Reset Kubernetes cluster (SUSE family)
+      ansible.builtin.command: kubeadm reset -f
+      when:
+        - ansible_facts['distribution'] == "Suse"
+        - kubeadm_config.stat.exists | default(false)
+      changed_when: kubeadm_config.stat.exists  | default(false)
+
+    - name: Reset Kubernetes cluster (Arch Linux)
+      ansible.builtin.command: kubeadm reset -f
+      when:
+        - ansible_facts['distribution'] == "Archlinux"
+        - kubeadm_config.stat.exists | default(false)
+      changed_when: kubeadm_config.stat.exists | default(false)
+
+    - name: Reset Kubernetes cluster (Alpine Linux)
+      ansible.builtin.command: kubeadm reset -f
+      when:
+        - ansible_facts['distribution'] == "Alpine"
+        - kubeadm_config.stat.exists | default(false)
+      changed_when: kubeadm_config.stat.exists | default(false)

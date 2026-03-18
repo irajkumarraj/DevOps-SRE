@@ -1,3 +1,63 @@
+<<<<<<< HEAD
+- name: Update-system
+  block:
+    # - name: Update packages on CentOS-based systems
+    #   ansible.builtin.yum:
+    #     name: '*'
+    #     state: latest
+    #   when: "'CentOS' in distributors_to_update and ansible_facts['distribution'] == 'CentOS'"
+
+    - name: Update all packages and show live progress
+      ansible.builtin.shell: |
+        yum -y update
+      args:
+        executable: /bin/bash
+      when: "'CentOS' in distributors_to_update and ansible_facts['distribution'] == 'CentOS'"
+      register: yum_update_result
+      # no async here so it runs in real-time
+
+    - name: Print yum output line by line
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ yum_update_result.stdout_lines }}"
+      when: "'CentOS' in distributors_to_update and ansible_facts['distribution'] == 'CentOS'"
+
+    - name: Update packages on CentOS-based systems
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+      when: "'CentOS' in distributors_to_update and ansible_facts['distribution'] == 'CentOS'"
+    - name: Update packages on Fedora
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+        update_cache: yes
+      when: "'Fedora' in distributors_to_update and ansible_facts['distribution'] == 'Fedora'"
+
+    - name: Update packages on Debian-based systems
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+      when: "'Debian' in distributors_to_update and ansible_facts['distribution'] == 'Debian'"
+
+    - name: Update packages on SUSE-based systems
+      community.general.zypper:
+        name: '*'
+        state: latest
+      when: "'Suse' in distributors_to_update and ansible_facts['distribution'] == 'Suse'"
+
+    - name: Update packages on Arch-based systems
+      community.general.pacman:
+        name: '*'
+        state: latest
+      when: "'Arch' in distributors_to_update and ansible_facts['distribution'] == 'Arch'"
+
+    - name: Update packages on Alpine Linux
+      community.general.apk:
+        update_cache: true
+        upgrade: true
+      when: "'Alpine' in distributors_to_update and ansible_facts['distribution'] == 'Alpine'"
+=======
 - name: update-system
   block:
     - name: Update packages on RedHat-based systems
@@ -35,3 +95,4 @@
         update_cache: yes
         upgrade: yes
       when: "'Alpine' in distributors_to_update and ansible_facts['os_family'] == 'Alpine'"
+>>>>>>> b3f70eedfa5ecb5cd2519c253d558f3dd7e960ef

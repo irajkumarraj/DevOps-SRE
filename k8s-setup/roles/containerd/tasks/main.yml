@@ -1,2 +1,17 @@
 ---
 # tasks file for containerd
+- name: Ensure distribution specific repo is enabled (needed for containerd)
+  ansible.builtin.import_tasks:
+    file: repo-enable.yaml
+
+- name: Install containerd
+  ansible.builtin.import_tasks:
+    file: install-containered.yaml
+
+- name: Configure containerd
+  ansible.builtin.import_tasks:
+    file: configure-containered.yaml
+
+- name: Restart containerd
+  ansible.builtin.import_tasks:
+    file: restart-containered.yaml

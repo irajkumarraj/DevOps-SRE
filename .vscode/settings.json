@@ -1,3 +1,9 @@
 {
+<<<<<<< HEAD
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": [],
+    "ansible.python.interpreterPath": "/bin/python3"
+=======
     "ansible.python.interpreterPath": "C:/Users/RAJ KUMAR RAJ/AppData/Roaming/Python/Python312/Scripts"
+>>>>>>> b3f70eedfa5ecb5cd2519c253d558f3dd7e960ef
 }

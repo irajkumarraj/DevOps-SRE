@@ -1,0 +1,88 @@
+- name: Enable distribution-specific repos
+  block:
+    # RHEL / CentOS CRB
+    - name: Enable CRB repo on RHEL/CentOS
+      ansible.builtin.command: dnf config-manager --set-enabled crb
+      become: true
+      register: crb_result
+      changed_when: "'enabled' in crb_result.stdout or crb_result.rc == 0"
+      when: "'CentOS' in distributors_to_update and ansible_facts['distribution'] == 'CentOS'"
+
+
+    # Fedora modular repo
+    # - name: Refresh DNF cache
+    #   ansible.builtin.command: dnf makecache
+    #   become: true
+    #   when: "'Fedora' in distributors_to_update and ansible_facts['distribution'] == 'Fedora'"
+      
+    # - name: List available container-tools modules
+    #   ansible.builtin.command: dnf module list container-tools
+    #   become: true
+    #   register: module_list
+    #   failed_when: false
+
+    # - name: Enable Fedora container-tools module
+    #   ansible.builtin.command: dnf module enable -y container-tools
+    #   become: true
+    #   register: fedora_repo_result
+    #   changed_when: fedora_repo_result.rc == 0
+    #   when: "'Fedora' in distributors_to_update and ansible_facts['distribution'] == 'Fedora'"
+
+    # Debian/Ubuntu universe repo
+    # - name: Enable universe repo on Debian/Ubuntu
+    #   ansible.builtin.apt_repository:
+    #     repo: "deb http://archive.ubuntu.com/ubuntu {{ ansible_facts.distribution_release }} universe"
+    #     state: present
+    #   become: true
+    #   when: "'Debian' in distributors_to_update and ansible_facts['distribution'] == 'Debian'"
+
+    # - name: Update apt cache on Debian/Ubuntu
+    #   ansible.builtin.apt:
+    #     update_cache: true
+    #   become: true
+    #   when: "'Debian' in distributors_to_update and ansible_facts['distribution'] == 'Debian'"
+
+    # SUSE Package Hub / virtualization repo
+    - name: Enable SUSE Package Hub repo
+      community.general.zypper_repository:
+        name: virtualisation
+        description: "Virtualisation repository"
+        repo: "http://download.opensuse.org/repositories/Virtualization/openSUSE_Tumbleweed/"
+        enabled: true
+        autorefresh: true
+      become: true
+      register: suse_repo_result
+      changed_when: suse_repo_result.changed
+      when: "'Suse' in distributors_to_update and ansible_facts['distribution'] == 'Suse'"
+
+    # Arch community repo
+    - name: Ensure Arch community repo is enabled
+      ansible.builtin.lineinfile:
+        path: /etc/pacman.conf
+        regexp: '^\s*#?Include = /etc/pacman.d/mirrorlist$'
+        line: 'Include = /etc/pacman.d/mirrorlist'
+        state: present
+      become: true
+      when: "'Arch' in distributors_to_update and ansible_facts['distribution'] == 'Arch'"
+
+    - name: Update pacman database (Arch)
+      community.general.pacman:
+        update_cache: true
+      become: true
+      when: "'Arch' in distributors_to_update and ansible_facts['distribution'] == 'Arch'"
+
+    # Alpine community repo
+    - name: Enable Alpine community repo
+      ansible.builtin.lineinfile:
+        path: /etc/apk/repositories
+        regexp: '^#?http.*alpine/edge/community'
+        line: "http://dl-cdn.alpinelinux.org/alpine/{{ ansible_facts.distribution_version }}/community"
+        state: present
+      become: true
+      when: "'Alpine' in distributors_to_update and ansible_facts['distribution'] == 'Alpine'"
+
+    - name: Update apk cache (Alpine)
+      community.general.apk:
+        update_cache: true
+      become: true
+      when: "'Alpine' in distributors_to_update and ansible_facts['distribution'] == 'Alpine'"

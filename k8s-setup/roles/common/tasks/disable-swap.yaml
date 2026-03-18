@@ -1,0 +1,32 @@
+- name: Disable swap on all Linux distributions
+  become: true
+  block:
+    - name: Check if any swap is currently active
+      ansible.builtin.command:
+        cmd: swapon --noheadings --show=NAME
+      register: swap_active
+      changed_when: false
+      failed_when: false
+
+    - name: Turn off all swap immediately if active
+      ansible.builtin.command:
+        cmd: swapoff -a
+      when: swap_active.stdout != ""
+      changed_when: swap_active.stdout != ""
+      failed_when: swap_active.rc != 0 and swap_active.stdout != ""
+
+    - name: Remove all swap entries from /etc/fstab
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^\s*\S+\s+swap\s+.*$'
+        replace: ''
+        backup: true
+      # changed_when: ansible.builtin.replace is changed
+      # replace is idempotent already, so Ansible knows if it changed the file
+
+    - name: Mask swap units on systemd-based systems to prevent reactivation
+      ansible.builtin.systemd:
+        name: swap.target
+        masked: true
+        state: stopped
+      when: ansible_service_mgr == "systemd"

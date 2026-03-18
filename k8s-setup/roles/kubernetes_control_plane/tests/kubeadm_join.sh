@@ -1,0 +1,1 @@
+{"changed": false, "skipped": true, "skip_reason": "Conditional result was False", "false_condition": "not kubeadm_config.stat.exists"}

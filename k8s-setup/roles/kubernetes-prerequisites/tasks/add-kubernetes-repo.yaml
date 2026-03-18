@@ -1,0 +1,113 @@
+- name: Add kubernetes packages in each distribution
+  block:
+    # CentOS / CentOS / Rocky / Alma
+    - name: Add Kubernetes repo on RHEL/CentOS
+      ansible.builtin.copy:
+        src: kubernetes-rhel.repo
+        dest: /etc/yum.repos.d/kubernetes.repo
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    # Fedora
+    - name: Add Kubernetes repo on Fedora
+      ansible.builtin.copy:
+        src: kubernetes-fedora.repo
+        dest: /etc/yum.repos.d/kubernetes.repo
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: ansible_facts['distribution'] == 'Fedora'
+
+    # Debian / Ubuntu
+    - name: Install prerequisites for Kubernetes repo
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+        update_cache: true
+      become: true
+      when: ansible_facts['distribution'] == 'Debian'
+
+    - name: Create apt keyrings directory
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+      become: true
+      when: ansible_facts['distribution'] == 'Debian'
+
+    - name: Add Kubernetes GPG key on Debian/Ubuntu
+      ansible.builtin.command: >
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.35/deb/Release.key
+        | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      become: true
+      when: ansible_facts['distribution'] == 'Debian'
+
+    - name: Add Kubernetes repo on Debian/Ubuntu
+      ansible.builtin.copy:
+        src: kubernetes-debian.list
+        dest: /etc/apt/sources.list.d/kubernetes.list
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: ansible_facts['distribution'] == 'Debian'
+
+    - name: Update apt cache on Debian/Ubuntu
+      ansible.builtin.apt:
+        update_cache: true
+      become: true
+      when: ansible_facts['distribution'] == 'Debian'
+
+    # SUSE
+    - name: Add Kubernetes repo on SUSE
+      ansible.builtin.copy:
+        src: kubernetes-suse.repo
+        dest: /etc/zypp/repos.d/kubernetes.repo
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: ansible_facts['distribution'] == 'Suse'
+
+    # Arch Linux
+    - name: Add Kubernetes repo on Arch
+      ansible.builtin.copy:
+        src: kubernetes-arch.repo
+        dest: /etc/pacman.d/kubernetes.conf
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: ansible_facts['distribution'] == 'Arch'
+
+
+    - name: Update pacman database (Arch)
+      community.general.pacman:
+        update_cache: true
+      become: true
+      when: ansible_facts['distribution'] == 'Arch'
+
+    # Alpine Linux
+    - name: Add Kubernetes repo on Alpine
+      ansible.builtin.copy:
+        src: kubernetes-alpine.repo
+        dest: /etc/apk/repositories.d/kubernetes.repo
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      when: ansible_facts['distribution'] == 'Alpine'
+
+    - name: Update apk cache (Alpine)
+      community.general.apk:
+        update_cache: true
+      become: true
+      when: ansible_facts['distribution'] == 'Alpine'

@@ -1,0 +1,67 @@
+- name: Stop kubelet service if present (all supported distributions)
+  block:
+    - name: Stop kubelet (CentOS family)
+      ansible.builtin.service:
+        name: kubelet
+        state: stopped
+      # ignore_errors: true
+      when: ansible_facts['distribution'] == "CentOS"
+      register: kubelet_stop_result
+      failed_when: >
+        kubelet_stop_result.failed
+        and ("Could not find the requested service" not in (kubelet_stop_result.msg | default('')))
+
+    - name: Stop kubelet (Fedora)
+      ansible.builtin.service:
+        name: kubelet
+        state: stopped
+      # ignore_errors: true
+      when: ansible_facts['distribution'] == "Fedora"
+      register: kubelet_stop_result
+      failed_when: >
+        kubelet_stop_result.failed
+        and ("Could not find the requested service" not in (kubelet_stop_result.msg | default('')))
+
+    - name: Stop kubelet (Debian family)
+      ansible.builtin.service:
+        name: kubelet
+        state: stopped
+      # ignore_errors: true
+      when: ansible_facts['distribution'] == "Debian"
+      register: kubelet_stop_result
+      failed_when: >
+        kubelet_stop_result.failed
+        and ("Could not find the requested service" not in (kubelet_stop_result.msg | default('')))
+
+    - name: Stop kubelet (SUSE family)
+      ansible.builtin.service:
+        name: kubelet
+        state: stopped
+      # ignore_errors: true
+      when: ansible_facts['distribution'] == "Suse"
+      register: kubelet_stop_result
+      failed_when: >
+        kubelet_stop_result.failed
+        and ("Could not find the requested service" not in (kubelet_stop_result.msg | default('')))
+
+    - name: Stop kubelet (Arch Linux)
+      ansible.builtin.service:
+        name: kubelet
+        state: stopped
+      # ignore_errors: true
+      when: ansible_facts['distribution'] == "Archlinux"
+      register: kubelet_stop_result
+      failed_when: >
+        kubelet_stop_result.failed
+        and ("Could not find the requested service" not in (kubelet_stop_result.msg | default('')))
+
+    - name: Stop kubelet (Alpine Linux)
+      ansible.builtin.service:
+        name: kubelet
+        state: stopped
+      # ignore_errors: true
+      when: ansible_facts['distribution'] == "Alpine"
+      register: kubelet_stop_result
+      failed_when: >
+        kubelet_stop_result.failed
+        and ("Could not find the requested service" not in (kubelet_stop_result.msg | default('')))

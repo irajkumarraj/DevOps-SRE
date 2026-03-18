@@ -1,0 +1,55 @@
+- name: Enable kubelet for corresponding distribution
+  block:
+    # CentOS / CentOS / Rocky / Alma
+    - name: Enable and start kubelet on RHEL/CentOS
+      ansible.builtin.service:
+        name: kubelet
+        state: started
+        enabled: true
+      become: true
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    # Fedora
+    - name: Enable and start kubelet on Fedora
+      ansible.builtin.service:
+        name: kubelet
+        state: started
+        enabled: true
+      become: true
+      when: ansible_facts['distribution'] == 'Fedora'
+
+    # Debian / Ubuntu
+    - name: Enable and start kubelet on Debian/Ubuntu
+      ansible.builtin.service:
+        name: kubelet
+        state: started
+        enabled: true
+      become: true
+      when: ansible_facts['distribution'] == 'Debian'
+
+    # SUSE
+    - name: Enable and start kubelet on SUSE
+      ansible.builtin.service:
+        name: kubelet
+        state: started
+        enabled: true
+      become: true
+      when: ansible_facts['distribution'] == 'Suse'
+
+    # Arch Linux
+    - name: Enable and start kubelet on Arch
+      ansible.builtin.systemd:
+        name: kubelet
+        state: started
+        enabled: true
+      become: true
+      when: ansible_facts['distribution'] == 'Arch'
+
+    # Alpine Linux
+    - name: Enable and start kubelet on Alpine
+      ansible.builtin.service:
+        name: kubelet
+        state: started
+        enabled: true
+      become: true
+      when: ansible_facts['distribution'] == 'Alpine'

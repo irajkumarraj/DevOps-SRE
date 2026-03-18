@@ -1,2 +1,9 @@
 ---
 # vars file for master
+distributors_to_update:
+  - CentOS
+  - Fedora
+  - Debian
+  - Suse
+  - Arch
+  - Alpine
